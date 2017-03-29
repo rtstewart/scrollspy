@@ -1,0 +1,144 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: hsl(234, 35%, 32%);
+}
+
+header {
+  background-color: rgb(34, 38, 42);
+  background-color: hsl(210, 11%, 15%);
+  background-color: hsl(234, 35%, 22%);
+  color: white;
+  padding: 1rem;
+}
+
+.clearfix::after {
+  content: '';
+  display: block;
+  clear: both;
+}
+
+main,
+main.na-demo-page-main {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  /*justify-content: space-between;*/
+  /*border: 1px solid green;*/
+}
+
+.spy-nav {
+  position: relative;
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 10rem;
+        flex: 0 0 10rem;
+  /*border: 1px solid hotpink;*/
+  /*overflow-y: scroll;*/
+}
+
+.spy-nav__list {
+  /* padding is what indents the li elements;
+      also of interest, setting padding to 0 gets rid of bullets; */
+  padding: 0;
+  /* margin: 0; is default, but state for explicitness */
+  margin: 0;
+  position: absolute;
+  /*top: 0;*/
+  top: auto;
+  width: 10rem;
+  overflow-y: auto;
+  /*flex-basis: 10rem;*/
+  border: 2px solid red;
+  /*z-index: 100;*/
+}
+
+.spy-nav__list li {
+  /* setting padding to 0 on parent ul gets rid of bullets ??;
+      but set here for explicitness anyway; */
+  list-style-type: none;
+  text-align: center;
+}
+
+.spy-nav__list li a {
+  position: relative;
+  display: block;
+  text-decoration: none;
+  padding: 1rem 0.5rem;
+  /*color: white;*/
+  /*background-color: #aaa;*/
+  transition: all 0.35s ease;
+}
+
+.spy-nav__list li a:hover {
+  background-color: yellow;
+  background-color: hsl(276, 46%, 62%);
+  color: #eee;
+}
+
+.spy-reference-container {
+  /*width: 400px;*/
+  border: 1px solid lime;
+}
+
+.spy-section {
+  background-color: #eee;
+  padding: 1rem;
+  border: 1px solid black;
+}
+
+footer {
+  height: 20rem;
+  background-color: gray;
+  background-color: hsl(234, 35%, 22%);
+}
+
+/* put dynamically added classes at bottom for specificity */
+
+/* class to be added when we want to fix the nav */
+.affix {
+  position: fixed;
+  top: 0;
+  /*z-index: 100;*/
+}
+
+.overflow-y {
+  overflow-y: scroll;
+}
+
+/* spy-specific rule sets */
+
+/* class to be used for initial inactive state for spy anchors */
+.spy-nav__a--inactive {
+  background-color: #aaa;
+  background-color: transparent;
+  color: #eee;
+}
+
+/* class to be added/removed to indicate the active spy section */
+.spy-nav__a--active {
+  background-color: orange;
+  background-color: hsl(276, 46%, 87%);
+  color: hsl(276, 46%, 22%);
+}
+
+/*.spy-nav__a::after {
+  display: block;
+  border: 1px solid red;
+  background-color: purple;
+  bottom: -.25rem;
+  content: '';
+  height: 2.25rem;
+  left: 0;
+  position: absolute;
+  transform: scaleX(2);
+  transform-origin: left;
+  transition: transform 300ms ease-in-out;
+  width: 100%;
+}*/
+
+/*.spy-nav__a:hover::after {
+  transform: scaleX(1);
+}
+*/
