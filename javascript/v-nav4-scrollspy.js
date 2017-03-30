@@ -63,21 +63,18 @@ var list = (function _vNavScrollspy() {
   var spyNavList;
   var spyNavListItems;
   var activeSpyNavAnchor;
-  var spyNavListItemHeight;
   var spyTargets;
   var spyTargetsObj;
   var spyRefContainerRect;
   var spyContentContainerRect;
 
+  var spyNavScrollTimer = null;
+  var spyNavScrollFlag;
+
   function _init() {
     spyNav = document.querySelector('.spy-nav');
     spyNavList = document.querySelector('.spy-nav__list');
     spyNavListItems = document.querySelectorAll('.spy-nav__list li');
-    for (var i=0; i<spyNavListItems.length; i++) {
-      //console.log('spyNavListItems[',i,'].offsetTop:', spyNavListItems[i].offsetTop);
-    }
-    spyNavListItemHeight = document.querySelector('.spy-nav__list li').getBoundingClientRect().height;
-    //console.log('spyNavListItemHeight:', spyNavListItemHeight);
     /* grab the array of spyTargets with class .spy-section, which must have
         ids corresponding to the href of the spy nav list anchors */
     spyTargets = document.querySelectorAll('.spy-section');
@@ -120,11 +117,7 @@ var list = (function _vNavScrollspy() {
       change positioning properties of any elements associated with spy
       functionality; */
   function _getSpyTargetsSizesAndPositions(event) {
-    if (event && event.type == 'scroll' && event.target == spyNavList) {
-      console.log(event,'\n', event.type, '\n', event.target);
-      return;
-    }
-    console.log('event:', event);
+    // if (event) event.stopPropagation();
     for (var i=0; i<spyTargets.length; i++) {
       spyTargetsObj[spyTargets[i].id] = spyTargets[i].getBoundingClientRect();
     }
@@ -145,11 +138,6 @@ var list = (function _vNavScrollspy() {
   }
 
   function _checkSpyTargets(event) {
-    if (event) {
-      console.log('in _checkSpyTargets; event.type, event.target;',event.type, event.target);
-    } else {
-      console.log(' in _checkSpyTargets with no event;');
-    }
     var currentSpyNavListItem;
     var currentSpyNavAnchor;
     /* look through all the spyTargetsObj objects to see which is in view */
@@ -179,6 +167,8 @@ var list = (function _vNavScrollspy() {
             the active spy list item in view;
         */
           console.log('spyNavList.scrollTop:', spyNavList.scrollTop);
+          if (spyNavScrollFlag) return;
+        // if (spyNavList.scrollTop > 0 && spyNavList.scrollTop < spyNavList.getBoundingClientRect().height - window.innerHeight) {
           if (activeSpyNavAnchor.getBoundingClientRect().top < 0) {
             /* top of active spy nav list item is above viewport, 'top' value
                 is negative; move the active list item down; */
@@ -188,7 +178,7 @@ var list = (function _vNavScrollspy() {
                 value is positive; move the active list item up */
             spyNavList.scrollTop += activeSpyNavAnchor.getBoundingClientRect().bottom - window.innerHeight;
           }
-
+        // }
       }
 
     } // end for (var key in spyTargetsObj)
@@ -203,7 +193,14 @@ var list = (function _vNavScrollspy() {
   } // end _checkSpyTargets
 
   function _checkNavScroll(event) {
-    _getSpyTargetsSizesAndPositions(event);
+    if (spyNavScrollTimer !== null) {
+        spyNavScrollFlag = true;
+        clearTimeout(spyNavScrollTimer);
+    }
+    spyNavScrollTimer = setTimeout(function() {
+          // if haven't scrolled in 1200ms, then set spyNavScrollFlag to false
+          spyNavScrollFlag = false;
+    }, 1200);
   }
 
   function _disableBodyScroll(event) {
@@ -213,56 +210,6 @@ var list = (function _vNavScrollspy() {
 
   function _enableBodyScroll(event) {
     document.body.style.overflow='auto';
-  }
-
-  function _preventWindowScroll (e) {
-    // var e0 = e.originalEvent;
-    // var delta = e0.wheelDelta || -e0.detail;
-
-    var delta = e.wheelDelta || -e.detail;
-
-    this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
-    e.preventDefault();
-  }
-
-  function _checkNavListScroll(e) {
-    //http://stackoverflow.com/questions/4770025/how-to-disable-scrolling-temporarily
-    console.log('spyNavList.scrollTop:', spyNavList.scrollTop);
-    // left: 37, up: 38, right: 39, down: 40,
-    // spacebar: 32, pageup: 33, pagedown: 34, end: 35, home: 36
-    var keys = {37: 1, 38: 1, 39: 1, 40: 1};
-
-    function preventDefault(e) {
-      e = e || window.event;
-      if (e.preventDefault)
-          e.preventDefault();
-      e.returnValue = false;
-    }
-
-    function preventDefaultForScrollKeys(e) {
-        if (keys[e.keyCode]) {
-            preventDefault(e);
-            return false;
-        }
-    }
-
-    function disableScroll() {
-      if (window.addEventListener) // older FF
-          window.addEventListener('DOMMouseScroll', preventDefault, false);
-      window.onwheel = preventDefault; // modern standard
-      window.onmousewheel = document.onmousewheel = preventDefault; // older browsers, IE
-      window.ontouchmove  = preventDefault; // mobile
-      document.onkeydown  = preventDefaultForScrollKeys;
-    }
-
-    function enableScroll() {
-        if (window.removeEventListener)
-            window.removeEventListener('DOMMouseScroll', preventDefault, false);
-        window.onmousewheel = document.onmousewheel = null;
-        window.onwheel = null;
-        window.ontouchmove = null;
-        document.onkeydown = null;
-    }
   }
 
   function _addListeners() {
@@ -277,6 +224,7 @@ var list = (function _vNavScrollspy() {
     // http://stackoverflow.com/questions/28411499/html-css-disable-scrolling-on-body
     // http://stackoverflow.com/questions/7600454/how-to-prevent-page-scrolling-when-scrolling-a-div-element
     // http://qnimate.com/detecting-end-of-scrolling-in-html-element/
+    // http://stackoverflow.com/questions/4620906/how-do-i-know-when-ive-stopped-scrolling-javascript
 
     // spyNavList.addEventListener('mouseover', _disableBodyScroll);
     // spyNavList.addEventListener('mouseout', _enableBodyScroll);
