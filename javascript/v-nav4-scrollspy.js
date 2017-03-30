@@ -141,10 +141,6 @@ var list = (function _vNavScrollspy() {
     for (var key in spyTargetsObj) {
       /* below gives initial inactive styling */
       spyNavList.querySelector('li a[href="#' + key + '"]').classList.add('spy-nav__a--inactive');
-      //console.log('from _initSpyNavAnchorState:\nspyTargetsObj[',key,']:', spyTargetsObj[key]);
-      // if (spyTargetsObj[key].bottom > 0 && Math.abs(spyTargetsObj[key].top) < window.innerHeight) {
-      //   spyNavList.querySelector('li a[href="#' + key + '"]').classList.add('spy-nav__a--active');
-      // }
     }
   }
 
@@ -159,29 +155,16 @@ var list = (function _vNavScrollspy() {
     /* look through all the spyTargetsObj objects to see which is in view */
     for (var key in spyTargetsObj) {
       currentSpyNavAnchor = spyNavList.querySelector('li a[href="#' + key + '"]');
-      //console.log('currentSpyNavAnchor:', currentSpyNavAnchor);
       currentSpyNavListItem = currentSpyNavAnchor.parentElement;
       /* in case parent of currentSpyNavAnchor is not <li>, we want to find
           the <li> that currentSpyNavAnchor anchor is in; */
-      // console.log('currentSpyNavListItem.nodeName:', currentSpyNavListItem.nodeName);
       for (var loops = 1; loops<=10 && currentSpyNavListItem.nodeName.toLowerCase() != 'li'; loops ++) {
         // console.log('currentSpyNavListItem.nodeName:', currentSpyNavListItem.nodeName);
         currentSpyNavListItem = currentSpyNavListItem.parentElement;
       }
-      //console.log('currentSpyNavListItem.nodeName:', currentSpyNavListItem.nodeName);
-      // currentSpyNavListItem = currentSpyNavAnchor.parentElement;
-      //console.log('currentSpyNavAnchor.parentNode:', currentSpyNavAnchor.parentNode);
-      // spyNavList.querySelector('li a[href="#' + key + '"]').classList.remove('spy-nav__a--active');
-      // currentSpyNavAnchor.classList.remove('spy-nav__a--active');
       if (spyRefContainerRect == document.body) {
         //console.info('spyRefContainer == document.body');
       }
-      // if (spyTargetsObj[key].top - spyContentYOffset <= 1 && scrollspyTargetsObj[key].bottom - scrollspyContentYOffset >= 0) {
-      // if (spyTargetsObj[key].bottom >= 1 && spyTargetsObj[key].top <= 1) {
-      // console.log('spyTargetsObj[',key,'].top:', spyTargetsObj[key].top);
-      // console.log('spyTargetsObj[',key,'].bottom;', spyTargetsObj[key].bottom);
-      // console.log('spyRefContainerRect.top:', spyRefContainerRect.top);
-      // console.log();
       if (spyTargetsObj[key].bottom >= 1
         && ( spyTargetsObj[key].top <= 1 || Math.abs(spyTargetsObj[key].top - spyRefContainerRect.top) <= 1) ) {
 
@@ -190,17 +173,11 @@ var list = (function _vNavScrollspy() {
         }
         currentSpyNavAnchor.classList.add('spy-nav__a--active');
         activeSpyNavAnchor = currentSpyNavAnchor;
-        //spyNavList.querySelector('li a[href="#' + key + '"]').classList.add('spy-nav__a--active');
         /* check visibility of active li a */
-        // console.log('event:', event);
         /*
           below is to have spy nav follow spy target scrolling to always keep
             the active spy list item in view;
         */
-        //if ( event && event.type == 'scroll' && event.currentTarget == window ) {
-          //console.log('event:', event);
-        // console.log('spyNavList.scrollTop:', spyNavList.scrollTop);
-        // if (spyNavList.scrollTop >= 1) {
           console.log('spyNavList.scrollTop:', spyNavList.scrollTop);
           if (activeSpyNavAnchor.getBoundingClientRect().top < 0) {
             /* top of active spy nav list item is above viewport, 'top' value
@@ -211,8 +188,6 @@ var list = (function _vNavScrollspy() {
                 value is positive; move the active list item up */
             spyNavList.scrollTop += activeSpyNavAnchor.getBoundingClientRect().bottom - window.innerHeight;
           }
-        // }
-        //} // end if ( event && event.type ...
 
       }
 
@@ -303,8 +278,8 @@ var list = (function _vNavScrollspy() {
     // http://stackoverflow.com/questions/7600454/how-to-prevent-page-scrolling-when-scrolling-a-div-element
     // http://qnimate.com/detecting-end-of-scrolling-in-html-element/
 
-    spyNavList.addEventListener('mouseover', _disableBodyScroll);
-    spyNavList.addEventListener('mouseout', _enableBodyScroll);
+    // spyNavList.addEventListener('mouseover', _disableBodyScroll);
+    // spyNavList.addEventListener('mouseout', _enableBodyScroll);
 
     spyNavList.addEventListener('scroll', _checkNavScroll);
 
